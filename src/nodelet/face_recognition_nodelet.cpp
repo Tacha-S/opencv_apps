@@ -461,6 +461,8 @@ class FaceRecognitionNodelet : public opencv_apps::Nodelet
       cv::Mat cv_img = cv_bridge::toCvShare(image, enc::BGR8)->image;
       opencv_apps::FaceArrayStamped ret_msg = *faces;
       std::vector<spencer_tracking_msgs::DetectedPerson> face_pose_vector;
+      cv::Mat depth_image;
+      convertPclMessageToMat(depth, depth_image);
       for (size_t i = 0; i < faces->faces.size(); ++i)
       {
         cv::Mat face_img, resized_image;
@@ -478,8 +480,6 @@ class FaceRecognitionNodelet : public opencv_apps::Nodelet
         if (publish_debug_image)
           drawFace(cv_img, ret_msg.faces[i]);
 
-        cv::Mat depth_image;
-        convertPclMessageToMat(depth, depth_image);
         cv::Point3f p;
         p = depth_image.at<cv::Point3f>(ret_msg.faces[i].face.y, ret_msg.faces[i].face.x);
         spencer_tracking_msgs::DetectedPerson detected_person;
