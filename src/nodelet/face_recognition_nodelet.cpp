@@ -483,9 +483,11 @@ class FaceRecognitionNodelet : public opencv_apps::Nodelet
         cv::Point3f p;
         p = depth_image.at<cv::Point3f>(ret_msg.faces[i].face.y, ret_msg.faces[i].face.x);
         spencer_tracking_msgs::DetectedPerson detected_person;
+        detected_person.confidence = confidence;
         detected_person.pose.pose.position.x = p.x;
         detected_person.pose.pose.position.y = p.y;
         detected_person.pose.pose.position.z = p.z;
+        detected_person.pose.pose.orientation.w = 1.0;
         detected_person.modality = "face";
         detected_person.name = ret_msg.faces[i].label;
         const double LARGE_VARIANCE = 999999999;
