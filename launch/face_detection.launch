@@ -8,6 +8,7 @@
   <arg name="use_opencv3_2" default="false" />
   <arg name="use_opencv3_3" default="$(arg use_opencv3)" />
   <arg name="use_opencv4" default="false" />
+  <arg name="hz" default="1"/>
 
   <arg name="image" default="image" doc="The image topic. Should be remapped to the name of the real image topic." />
 
@@ -46,6 +47,7 @@
       <param name="queue_size" value="$(arg queue_size)" />
       <param name="face_cascade_name" value="$(arg face_cascade_name)" />
       <param name="eyes_cascade_name" value="$(arg eyes_cascade_name)" />
+      <param name="hz" value="$(arg hz)"/>
     </node>
   </group>
   <group if="$(arg use_nodelet)">
@@ -58,6 +60,7 @@
       <param name="queue_size" value="$(arg queue_size)" />
       <param name="face_cascade_name" value="$(arg face_cascade_name)" />
       <param name="eyes_cascade_name" value="$(arg eyes_cascade_name)" />
+      <param name="hz" value="$(arg hz)"/>
     </node>
   </group>
 </launch>

@@ -76,6 +76,7 @@ class FaceDetectionNodelet : public opencv_apps::Nodelet
   int queue_size_;
   bool debug_view_;
   ros::Time prev_stamp_;
+  int hz_;
 
   cv::CascadeClassifier face_cascade_;
   cv::CascadeClassifier eyes_cascade_;
@@ -104,6 +105,9 @@ class FaceDetectionNodelet : public opencv_apps::Nodelet
 
   void doWork(const sensor_msgs::ImageConstPtr& msg, const std::string& input_frame_from_msg)
   {
+    if (1. / hz_ > (msg->header.stamp - prev_stamp_).toSec())
+      return;
+
     // Work on the image.
     try
     {
@@ -236,6 +240,7 @@ public:
 
     pnh_->param("queue_size", queue_size_, 3);
     pnh_->param("debug_view", debug_view_, false);
+    pnh_->param("hz", hz_, 1);
     if (debug_view_)
     {
       always_subscribe_ = true;

@@ -325,6 +325,8 @@ class FaceRecognitionNodelet : public opencv_apps::Nodelet
   bool use_saved_data_;
   double face_padding_;
   int queue_size_;
+  int hz_;
+  ros::Time prev_stamp_;
   std::string data_dir_;
   boost::mutex mutex_;
 
@@ -453,6 +455,10 @@ class FaceRecognitionNodelet : public opencv_apps::Nodelet
       return;
     }
 
+    if (1. / hz_ > (image->header.stamp - prev_stamp_).toSec())
+      return;
+
+    prev_stamp_ = image->header.stamp;
     // check if need to draw and publish debug image
     bool publish_debug_image = debug_img_pub_.getNumSubscribers() > 0;
 
@@ -724,6 +730,8 @@ public:
     // parameters
     pnh_->param("approximate_sync", use_async_, false);
     pnh_->param("queue_size", queue_size_, 100);
+    pnh_->param("hz", hz_, 1);
+    prev_stamp_ = ros::Time(0, 0);
 
     // advertise
     debug_img_pub_ = advertise<sensor_msgs::Image>(*pnh_, "debug_image", 1);

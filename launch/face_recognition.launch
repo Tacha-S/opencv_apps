@@ -17,6 +17,7 @@
   <arg name="image" default="image" />
   <arg name="depth" default="depth" />
   <arg name="data_dir" default="~/.ros/opencv_apps/face_data" />
+  <arg name="hz" default="1"/>
 
   <include file="$(find opencv_apps)/launch/face_detection.launch" if="$(arg launch_face_detection)">
     <arg name="image" value="$(arg image)" />
@@ -29,6 +30,7 @@
     <arg name="use_opencv3_2" value="$(arg use_opencv3_2)" />
     <arg name="use_opencv3_3" value="$(arg use_opencv3_3)" />
     <arg name="use_opencv4" value="$(arg use_opencv4)" />
+    <arg name="hz" value="$(arg hz)"/>
   </include>
 
   <group unless="$(arg use_nodelet)">
@@ -36,6 +38,7 @@
     <node name="face_recognition" pkg="opencv_apps" type="face_recognition" output="screen">
       <param name="data_dir" value="$(arg data_dir)" />
       <param name="queue_size" value="$(arg queue_size)" />
+      <param name="hz" value="$(arg hz)"/>
       <remap from="image" to="$(arg image)" />
       <remap from="depth" to="$(arg depth)" />
       <remap from="faces" to="face_detection/faces" />
@@ -47,6 +50,7 @@
     <node pkg="nodelet" type="nodelet" name="face_recognition" args="load opencv_apps/face_recognition $(arg nodelet_manager)" output="screen" launch-prefix="nice -n 20">
       <param name="data_dir" value="$(arg data_dir)" />
       <param name="queue_size" value="$(arg queue_size)" />
+      <param name="hz" value="$(arg hz)"/>
       <remap from="image" to="$(arg image)" />
       <remap from="depth" to="$(arg depth)" />
       <remap from="faces" to="face_detection/faces" />
